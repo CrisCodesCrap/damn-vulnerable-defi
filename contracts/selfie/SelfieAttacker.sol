@@ -24,6 +24,11 @@ interface ISimpleGovernance {
     function executeAction(uint256 actionId) external payable returns (bytes memory);
 }
 
+/**
+ * @title SelfieAttacker
+ * @dev This contract is used to exploit the "SelfiePool" contract's vulnerability.
+ * @author Kristian Apostolov @CrisCodesCrap
+ */
 contract SelfieAttacker is Attacker, IERC3156FlashBorrower {
 
     DamnValuableTokenSnapshot private immutable _token;
