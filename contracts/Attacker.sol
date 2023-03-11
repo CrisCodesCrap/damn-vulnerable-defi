@@ -15,7 +15,7 @@ abstract contract Attacker is IAttacker, Ownable {
 
     receive() external payable {}
     
-    function startAttack() external virtual {
+    function startAttack() external virtual onlyOwner {
         revert NotImplemented();
     }
 
